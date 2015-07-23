@@ -1,3 +1,4 @@
+# Tested with Python 2.7.9, Linux & Mac OS X
 import socket
 import StringIO
 import sys
@@ -15,21 +16,16 @@ class WSGIServer(object):
             self.address_family,
             self.socket_type
         )
-
         # Allow to reuse the same address
         listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
         # Bind
         listen_socket.bind(server_address)
-
         # Activate
         listen_socket.listen(self.request_queue_size)
-
         # Get server host name and port
         host, port = self.listen_socket.getsockname()[:2]
         self.server_name = socket.getfqdn(host)
         self.server_port = port
-
         # Return headers set by Web framework/Web application
         self.headers_set = []
 
@@ -41,14 +37,12 @@ class WSGIServer(object):
         while True:
             # New client connection
             self.client_connection, client_address = listen_socket.accept()
-
             # Handle one request and close the client connection. Then
             # loop over to wait for another client connection
             self.handle_one_request()
 
     def handle_one_request(self):
         self.request_data = request_data = self.client_connection.recv(1024)
-
         # Print formatted request data a la 'curl -v'
         print(''.join(
             '< {line}\n'.format(line=line)
@@ -70,7 +64,6 @@ class WSGIServer(object):
     def parse_request(self, text):
         request_line = text.splitlines()[0]
         request_line = request_line.rstrip('\r\n')
-
         # Break down the request line into components
         (self.request_method,  # GET
          self.path,            # /hello
@@ -79,7 +72,6 @@ class WSGIServer(object):
 
     def get_environ(self):
         env = {}
-
         # The following code snippet does not follow PEP8 conventions
         # but it's formatted the way it is for demonstration purposes
         # to emphasize the required variables and their values
@@ -92,7 +84,6 @@ class WSGIServer(object):
         env['wsgi.multithread']  = False
         env['wsgi.multiprocess'] = False
         env['wsgi.run_once']     = False
-
         # Required CGI variables
         env['REQUEST_METHOD']    = self.request_method    # GET
         env['PATH_INFO']         = self.path              # /hello
@@ -107,7 +98,6 @@ class WSGIServer(object):
             ('Server', 'WSGIServer 0.2'),
         ]
         self.headers_set = [status, response_headers + server_headers]
-
         # To adhere to WSGI specification the start_response must return
         # a 'write' callable. We simplicity's sake we'll ignore that detail
         # for now.

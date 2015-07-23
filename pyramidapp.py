@@ -3,10 +3,10 @@ from pyramid.response import Response
 
 
 def hello_world(request):
-	return Response(
-		'Hello world from Pyramid!\n',
-		content_type = 'text/plain',
-	)
+    return Response(
+        'Hello world from Pyramid!\n',
+        content_type='text/plain',
+    )
 
 config = Configurator()
 config.add_route('hello', '/hello')
